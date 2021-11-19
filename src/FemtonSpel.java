@@ -6,14 +6,27 @@ import java.awt.event.ActionListener;
 public class FemtonSpel extends JFrame {
 
     JButton[][] board = new JButton[4][4];
+    JButton resetButton = new JButton("New Game");
+    JButton winButton = new JButton("Click to Win");
+    JPanel tilePanel = new JPanel();
+    JPanel mainPanel = new JPanel();
+    JPanel bottomPanel = new JPanel();
+    buttonListener pushed = new buttonListener();
+
     int tile1;
     int tile2;
 
     public FemtonSpel(){
 
-        Container container = getContentPane();
-        container.setLayout(new GridLayout(4,4));
-        buttonListener pushed = new buttonListener();
+        tilePanel.setLayout(new GridLayout(4,4));
+        bottomPanel.add(resetButton);
+        bottomPanel.add(winButton);
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(tilePanel,BorderLayout.CENTER);
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+        resetButton.addActionListener(reset);
+        winButton.addActionListener(win);
+        add(mainPanel);
 
         for (int i = 0; i < 4 ; i++) {
 
@@ -23,7 +36,7 @@ public class FemtonSpel extends JFrame {
                 board[i][j] = n;
                 board[i][j].addActionListener(pushed);
                 board[i][j].setBackground(Color.lightGray);
-                container.add(board[i][j]);
+                tilePanel.add(board[i][j]);
             }
         }
     }
@@ -82,6 +95,66 @@ public class FemtonSpel extends JFrame {
             }
         }
     }
+
+    ActionListener reset = e -> {
+        if (e.getSource() == resetButton) {
+
+            tilePanel.removeAll();
+
+                for (int i = 0; i < 4 ; i++) {
+
+                    for (int j = 0; j < 4; j++) {
+
+                        JButton n = new JButton();
+                        board[i][j] = n;
+                        board[i][j].setBackground(Color.lightGray);
+                        board[i][j].addActionListener(pushed);
+                        tilePanel.add(board[i][j]);}}
+
+                shuffle();
+        }
+    };
+
+    public void gameWin(){
+
+        boolean[] tileValues = new boolean[17];
+
+        for (int i = 0; i < 4 ; i++) {
+
+            for (int j = 0; j < 4; j++) {
+
+                JButton n = new JButton();
+                board[i][j] = n;
+                board[i][j].setBackground(Color.lightGray);
+                board[i][j].addActionListener(pushed);
+                tilePanel.add(board[i][j]);
+                int val = 1;
+
+                while(tileValues[val]){
+                    val = ++val;
+                }
+                tileValues[val] = true;
+
+                if(val!=16)
+                    board[i][j].setText(""+val);
+                else {
+                    board[i][j].setBackground(Color.darkGray);
+                    tile1 = i;
+                    tile2 = j;
+
+                    JOptionPane.showMessageDialog(null, "Grattis!! Du klarade 15-Spelet!");
+                }
+            }
+        }
+    }
+
+    ActionListener win = e -> {
+        if (e.getSource() == winButton) {
+            tilePanel.removeAll();
+            gameWin();
+        }
+    };
+
     public void moves(int i, int j){
 
         if ((i+1 == tile1 && j == tile2) || (i-1 == tile1 && j == tile2) || (i == tile1 && j+1 == tile2) || (i == tile1 && j-1 == tile2)){
