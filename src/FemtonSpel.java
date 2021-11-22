@@ -39,6 +39,23 @@ public class FemtonSpel extends JFrame {
                 tilePanel.add(board[i][j]);
             }
         }
+        isWin();
+    }
+    public boolean isWin(){
+
+        int count = 1;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (i == 3 && j == 3){
+                    break;
+                }
+                if (!board[i][j].getText().equals(String.valueOf(count))) {
+                    return false;
+                } count++;
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Grattis - du klarade spelet!");
+        return true;
     }
 
     public static void main(String[] args) {
@@ -93,6 +110,7 @@ public class FemtonSpel extends JFrame {
                     }
                 }
             }
+            isWin();
         }
     }
 
@@ -112,6 +130,15 @@ public class FemtonSpel extends JFrame {
                         tilePanel.add(board[i][j]);}}
 
                 shuffle();
+        }
+    };
+
+    ActionListener win = e -> {
+        if (e.getSource() == winButton) {
+            tilePanel.removeAll();
+            gameWin();
+            JOptionPane.showMessageDialog(null, "Grattis!! Du klarade 15-Spelet!");
+
         }
     };
 
@@ -141,19 +168,11 @@ public class FemtonSpel extends JFrame {
                     board[i][j].setBackground(Color.darkGray);
                     tile1 = i;
                     tile2 = j;
-
-                    JOptionPane.showMessageDialog(null, "Grattis!! Du klarade 15-Spelet!");
                 }
             }
         }
     }
 
-    ActionListener win = e -> {
-        if (e.getSource() == winButton) {
-            tilePanel.removeAll();
-            gameWin();
-        }
-    };
 
     public void moves(int i, int j){
 
